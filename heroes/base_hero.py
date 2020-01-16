@@ -1,5 +1,11 @@
 from abc import ABC
 
+from custom_errors import energyTooHighError
+from custom_errors import invalidEnergyError
+from custom_errors import invalidHealthError
+from custom_errors import invalidNameError
+from custom_errors import skillExistsError
+from custom_errors import skillNotPresentError
 from custom_errors.energyTooHighError import EnergyTooHighError
 from custom_errors.invalidEnergyError import InvalidEnergyError
 from custom_errors.invalidHealthError import InvalidHealthError
@@ -11,48 +17,48 @@ from custom_errors.skillNotPresentError import SkillNotPresentError
 class Hero(ABC):
     def __init__(self, name, health, energy):
         self.__name = name
-        self.__health = int(health)
+        self.__set_health(health)
         self.__energy = int(energy)
         self.__weapon = ""
         self.__armour = ""
         self.__spells = {}
         self.__passives = {}
 
-    def get_name(self):
+    def name(self):
         return self.__name
 
     @classmethod
     def __set_name(cls, name):
         if 2 > len(name) > 50:
-            raise InvalidNameError("Name cannot be less than 2 and more than 50 characters")
+            raise InvalidNameError(invalidNameError.msg())
         cls.__name = name
 
-    def get_health(self):
+    def health(self):
         return self.__health
 
     @classmethod
     def __set_health(cls, health):
         if health <= 0 or health > 100:
-            raise InvalidHealthError("Health cannot be less than 0!")
+            raise InvalidHealthError(invalidHealthError.msg())
         cls.__health = health
 
-    def get_energy(self):
+    def energy(self):
         return self.__energy
 
     @classmethod
     def __set_energy(cls, energy):
         if energy <= 0 or energy > 100:
-            raise InvalidEnergyError("Invalid energy!")
+            raise InvalidEnergyError(invalidEnergyError.msg())
         cls.__energy = energy
 
-    def get_weapon(self):
+    def weapon(self):
         return self.__weapon
 
     @classmethod
     def __set_weapon(cls, weapon):
         cls.__weapon = weapon
 
-    def get_armour(self):
+    def armour(self):
         return self.__armour
 
     @classmethod
@@ -63,12 +69,12 @@ class Hero(ABC):
         return self.__spells
 
     def learn_spell(self, name, energy, damage):
-        if energy > self.get_energy():
-            raise EnergyTooHighError("Energy cost is too high!")
+        if energy > self.energy:
+            raise EnergyTooHighError(energyTooHighError.msg())
 
         for x in self.get_spells().keys():
             if x == name:
-                raise SkillExistsError("Skill already exists")
+                raise SkillExistsError(skillExistsError.msg())
 
         self.get_spells()[name] = [energy, damage]
         return f"You've learned a new spell! {name}: {energy} energy cost and {damage} damage output"
@@ -79,19 +85,19 @@ class Hero(ABC):
                 del self.get_spells()[name]
                 return f"The spell, {name}, is forgotten"
 
-        raise SkillNotPresentError("Spell is not learned!")
+        raise SkillNotPresentError(skillNotPresentError.msg())
 
     def get_passives(self):
         return self.__passives
 
     def learn_passive(self, name, energy, amp, skill):
         skill_is_present = False
-        if energy > self.get_energy():
-            raise EnergyTooHighError("Energy cost is too high!")
+        if energy > self.energy:
+            raise EnergyTooHighError(energyTooHighError.msg())
 
         for x in self.get_passives().keys():
             if x == name:
-                raise SkillExistsError("Skill already exists")
+                raise SkillExistsError(skillExistsError.msg())
 
         for x in self.get_spells().keys():
             if x == skill:
@@ -108,4 +114,4 @@ class Hero(ABC):
                 del self.get_passives()[name]
                 return f"The passive, {name}, is forgotten"
 
-        raise SkillNotPresentError("Spell is not learned!")
+        raise SkillNotPresentError(skillNotPresentError.msg())
