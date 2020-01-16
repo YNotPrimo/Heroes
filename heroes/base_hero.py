@@ -24,7 +24,7 @@ class Hero(ABC):
     @classmethod
     def __set_name(cls, name):
         if 2 > len(name) > 50:
-            raise InvalidNameError()
+            raise InvalidNameError("Name cannot be less than 2 and more than 50 characters")
         cls.__name = name
 
     def get_health(self):
@@ -33,7 +33,7 @@ class Hero(ABC):
     @classmethod
     def __set_health(cls, health):
         if health <= 0 or health > 100:
-            raise InvalidHealthError()
+            raise InvalidHealthError("Health cannot be less than 0!")
         cls.__health = health
 
     def get_energy(self):
@@ -42,7 +42,7 @@ class Hero(ABC):
     @classmethod
     def __set_energy(cls, energy):
         if energy <= 0 or energy > 100:
-            raise InvalidEnergyError()
+            raise InvalidEnergyError("Invalid energy!")
         cls.__energy = energy
 
     def get_weapon(self):
@@ -64,11 +64,11 @@ class Hero(ABC):
 
     def learn_spell(self, name, energy, damage):
         if energy > self.get_energy():
-            raise EnergyTooHighError()
+            raise EnergyTooHighError("Energy cost is too high!")
 
         for x in self.get_spells().keys():
             if x == name:
-                raise SkillExistsError()
+                raise SkillExistsError("Skill already exists")
 
         self.get_spells()[name] = [energy, damage]
         return f"You've learned a new spell! {name}: {energy} energy cost and {damage} damage output"
@@ -79,7 +79,7 @@ class Hero(ABC):
                 del self.get_spells()[name]
                 return f"The spell, {name}, is forgotten"
 
-        raise SkillNotPresentError()
+        raise SkillNotPresentError("Spell is not learned!")
 
     def get_passives(self):
         return self.__passives
@@ -87,11 +87,11 @@ class Hero(ABC):
     def learn_passive(self, name, energy, amp, skill):
         skill_is_present = False
         if energy > self.get_energy():
-            raise EnergyTooHighError()
+            raise EnergyTooHighError("Energy cost is too high!")
 
         for x in self.get_passives().keys():
             if x == name:
-                raise SkillExistsError()
+                raise SkillExistsError("Skill already exists")
 
         for x in self.get_spells().keys():
             if x == skill:
@@ -108,4 +108,4 @@ class Hero(ABC):
                 del self.get_passives()[name]
                 return f"The passive, {name}, is forgotten"
 
-        raise SkillNotPresentError()
+        raise SkillNotPresentError("Spell is not learned!")
