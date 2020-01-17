@@ -7,7 +7,7 @@ from heroes.base_hero import Hero
 
 class Swordmaster(Hero, ABC):
     def __init__(self, name, health, energy):
-        super().__init__(name, energy)
+        super().__init__(name, health, energy)
         self.__set_health(health)
 
     @classmethod

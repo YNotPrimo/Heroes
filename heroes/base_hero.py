@@ -27,20 +27,25 @@ class Hero(ABC):
     def name(self):
         return self.__name
 
-    @classmethod
-    def __set_name(cls, name):
+    def __set_name(self, name):
         if 2 > len(name) > 50:
             raise InvalidNameError(invalidNameError.msg())
-        cls.__name = name
+        self.__name = name
 
     def health(self):
         return self.__health
 
-    @classmethod
-    def __set_health(cls, health):
+    def __set_health(self, health):
+        min = self.__min_health()
+        max = self.__max_health()
         if health <= 0 or health > 100:
             raise InvalidHealthError(invalidHealthError.msg())
-        cls.__health = health
+        self.__health = health
+
+    @classmethod
+    def __min_health(cls):
+        #TODO and MAX HEALTH
+        return a
 
     def energy(self):
         return self.__energy
